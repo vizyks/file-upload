@@ -6,8 +6,8 @@ usersRouter.get("/", (req, res) => {
   res.send("This is the home index page of file upload.");
 });
 
-usersRouter.get("/logout", usersController.logout);
-usersRouter.post("/login", usersController.login);
-usersRouter.post("/signup", usersController.signup);
+usersRouter.get("/logout", usersController.logOut);
+usersRouter.post("/login", usersController.logIn);
+usersRouter.post("/signup", usersController.signUp);
 
 export default usersRouter;
