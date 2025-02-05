@@ -1,5 +1,6 @@
-const main = () => {
-  console.log("hello word");
-};
+require("dotenv").config();
+const express = require("express");
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-main();
+app.listen(PORT, () => console.log(`App listening on port ${PORT}`));
