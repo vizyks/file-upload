@@ -16,7 +16,7 @@ function Home() {
           </p>
           <div className="flex flex-col gap-4">
             <Link to="/signup">
-              <button className="bg-purple py-4 px-16 rounded-sm text-xs font-bold transition duration-150 ease-in-out hover:bg-purple-hover hover:cursor-pointer">
+              <button className="bg-purple py-4 px-16 rounded-sm text-xs font-bold transition duration-150 ease-in-out hover:bg-purple-btn-hover hover:cursor-pointer">
                 GET STARTED
               </button>
             </Link>
