@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@theme {
+  --color-black: rgb(21, 21, 21);
+  --color-white: rgb(238, 238, 238);
+  --color-purple: rgb(122, 59, 238);
+  --color-purple-accent: rgb(167, 139, 250);
+  --color-purple-hover: rgb(139, 92, 245);
+  --color-grey: rgb(34, 34, 34);
+  --color-grey-text: rgb(163, 163, 163);
+}
