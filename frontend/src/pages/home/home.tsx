@@ -21,7 +21,7 @@ function Home() {
               </button>
             </Link>
             <Link className="w-12 self-center" to="/login">
-              <button className="text-grey-text text-xs transition duration-150 ease-in-out hover:text-purple-accent hover:cursor-pointer">
+              <button className="text-grey-accent text-xs transition duration-150 ease-in-out hover:text-purple-accent hover:cursor-pointer">
                 Sign In
               </button>
             </Link>
