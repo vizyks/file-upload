@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 function Home() {
   return (
     <>
-      <main className="bg-black text-white text-center w-screen h-screen flex justify-center">
-        <div className="flex flex-col justify-center items-center w-2xl gap-4">
-          <h1 className="text-6xl/tight font-bold ">
+      <main className="bg-black text-white text-center w-screen h-screen flex justify-center items-center">
+        <div className="flex flex-col w-2xl gap-4 p-6">
+          <h1 className="text-4xl/tight font-bold sm:text-5xl/tight md:text-6xl/tight">
             Warp Files —<span className="text-purple-accent"> Infinite</span>
             <br />
             Possibilities
