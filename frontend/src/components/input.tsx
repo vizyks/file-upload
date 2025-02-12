@@ -6,10 +6,12 @@ function Input({
   type = "text",
   name,
   recovery = false,
+  required = true,
 }: {
   type?: InputType;
   name: string;
   recovery?: boolean;
+  required?: boolean;
 }) {
   const normalizeName = name.toLowerCase();
   return (
@@ -30,12 +32,22 @@ function Input({
           )}
         </div>
       )}
-      <input
-        className="border-0 outline-0 bg-grey rounded-sm px-3 py-2 text-sm ring ring-grey-ring hover:ring-grey-ring-hover focus:ring-[3px] focus:ring-grey-ring-hover"
-        type={type}
-        name={normalizeName}
-        id={normalizeName}
-      />
+      {required ? (
+        <input
+          className="border-0 outline-0 bg-grey rounded-sm px-3 py-2 text-sm ring ring-grey-ring hover:ring-grey-ring-hover focus:ring-[3px] focus:ring-grey-ring-hover"
+          type={type}
+          name={normalizeName}
+          id={normalizeName}
+          required
+        />
+      ) : (
+        <input
+          className="border-0 outline-0 bg-grey rounded-sm px-3 py-2 text-sm ring ring-grey-ring hover:ring-grey-ring-hover focus:ring-[3px] focus:ring-grey-ring-hover"
+          type={type}
+          name={normalizeName}
+          id={normalizeName}
+        />
+      )}
     </div>
   );
 }
