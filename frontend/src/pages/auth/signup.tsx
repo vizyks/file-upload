@@ -32,57 +32,69 @@ function SignUp() {
   type Email = z.infer<typeof emailSchema>;
   type Password = z.infer<typeof passwordSchema>;
 
-  // Refactor the error handling to seperate function
-  // to reduce redundancy.
-
-  const handleUsername = (username: UserName) => {
-    const result = userNameSchema.safeParse(username);
+  const handleValidation = <T,>(
+    value: T,
+    schema: Zod.Schema<T>,
+    setError: (error: string) => void,
+    fieldName: string
+  ) => {
+    const result = schema.safeParse(value);
 
     if (result.success) {
-      setUserError("");
+      setError("");
+      return true;
     } else {
-      const error = result.error.format();
+      const error = result.error.format() as Record<
+        string,
+        { _errors?: string[] }
+      >;
 
-      if (error.username?._errors[0]) {
-        setUserError(error.username._errors[0]);
+      if (error[fieldName]?._errors?.[0]) {
+        setError(error[fieldName]._errors[0]);
+        return false;
       }
     }
   };
 
-  const handleEmail = (email: Email) => {
-    const result = emailSchema.safeParse(email);
+  const handleUsername = (username: UserName) =>
+    handleValidation(username, userNameSchema, setUserError, "username");
 
-    if (result.success) {
-      setEmailError("");
-    } else {
-      const error = result.error.format();
-      console.log(result.error);
+  const handleEmail = (email: Email) =>
+    handleValidation(email, emailSchema, setEmailError, "email");
 
-      if (error.email?._errors[0]) {
-        setEmailError(error.email._errors[0]);
-      }
-    }
-  };
-
-  const handlePassword = (password: Password) => {
-    const result = passwordSchema.safeParse(password);
-
-    if (result.success) {
-      setPasswordError("");
-    } else {
-      const error = result.error.format();
-      console.log(result.error);
-
-      if (error.password?._errors[0]) {
-        setPasswordError(error.password._errors[0]);
-      }
-    }
-  };
+  const handlePassword = (password: Password) =>
+    handleValidation(password, passwordSchema, setPasswordError, "password");
 
   const handleSubmit = (e) => {
+    // Validate again to prevent submitting an empty form e.g form is empty load meaning there are "no" errors yet.
+    const userName = handleValidation(
+      { username: e.target.username.value },
+      userNameSchema,
+      setUserError,
+      "username"
+    );
+    const email = handleValidation(
+      { email: e.target.email.value },
+      emailSchema,
+      setEmailError,
+      "email"
+    );
+    const password = handleValidation(
+      { password: e.target.password.value },
+      passwordSchema,
+      setPasswordError,
+      "password"
+    );
+
+    if (!userName || !email || !password) {
+      console.log("Cant be empty and can't have errors");
+    } else {
+      console.log("success");
+      // redirect to dashboard
+    }
+
+    // Prevent form submission
     e.preventDefault();
-    // TODO: double check against a bigger "User" schema?
-    // Logic to create User then redirect to login or dashboard
   };
 
   return (
