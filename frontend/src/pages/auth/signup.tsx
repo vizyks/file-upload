@@ -1,96 +1,56 @@
 import { Link } from "react-router-dom";
-import { z } from "zod";
 import { useState } from "react";
+import handleValidation from "@/features/handleValidation";
+import {
+  nameSchema,
+  Name,
+  emailSchema,
+  Email,
+  passwordSignupSchema,
+  PasswordSignup,
+} from "@/lib/auth";
 
 function SignUp() {
-  const [userError, setUserError] = useState<string>("");
-  const [emailError, setEmailError] = useState<string>("");
-  const [passwordError, setPasswordError] = useState<string>("");
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
-  const userNameSchema = z.object({
-    username: z
-      .string()
-      .min(1, { message: "Can't be empty." })
-      .max(10, { message: "Can't be 10 or more character long." }),
-  });
-
-  const emailSchema = z.object({
-    email: z.string().min(1, { message: "Can't be empty." }).email(),
-  });
-
-  // Possibly make min a higher num
-  const passwordSchema = z.object({
-    password: z
-      .string()
-      .min(1, { message: "Can't be empty." })
-      .regex(/[^a-zA-Z0-9\s]/, {
-        message: "Must contain atleast one special character.",
-      }),
-  });
-
-  type UserName = z.infer<typeof userNameSchema>;
-  type Email = z.infer<typeof emailSchema>;
-  type Password = z.infer<typeof passwordSchema>;
-
-  const handleValidation = <T,>(
-    value: T,
-    schema: Zod.Schema<T>,
-    setError: (error: string) => void,
-    fieldName: string
-  ) => {
-    const result = schema.safeParse(value);
-
-    if (result.success) {
-      setError("");
-      return true;
-    } else {
-      const error = result.error.format() as Record<
-        string,
-        { _errors?: string[] }
-      >;
-
-      if (error[fieldName]?._errors?.[0]) {
-        setError(error[fieldName]._errors[0]);
-        return false;
-      }
-    }
-  };
-
-  const handleUsername = (username: UserName) =>
-    handleValidation(username, userNameSchema, setUserError, "username");
+  const handleName = (username: Name) =>
+    handleValidation(username, nameSchema, setNameError, "username");
 
   const handleEmail = (email: Email) =>
     handleValidation(email, emailSchema, setEmailError, "email");
 
-  const handlePassword = (password: Password) =>
-    handleValidation(password, passwordSchema, setPasswordError, "password");
-
-  const handleSubmit = (e) => {
-    // Validate again to prevent submitting an empty form e.g form is empty load meaning there are "no" errors yet.
-    const userName = handleValidation(
-      { username: e.target.username.value },
-      userNameSchema,
-      setUserError,
-      "username"
-    );
-    const email = handleValidation(
-      { email: e.target.email.value },
-      emailSchema,
-      setEmailError,
-      "email"
-    );
-    const password = handleValidation(
-      { password: e.target.password.value },
-      passwordSchema,
+  const handlePassword = (password: PasswordSignup) =>
+    handleValidation(
+      password,
+      passwordSignupSchema,
       setPasswordError,
       "password"
     );
 
-    if (!userName || !email || !password) {
-      console.log("Cant be empty and can't have errors");
+  const handleSubmit = (e: React.FormEvent) => {
+    const target = e.target as typeof e.target & {
+      username: { value: string };
+      email: { value: string };
+      password: { value: string };
+    };
+
+    if (
+      nameError ||
+      nameError === null ||
+      passwordError ||
+      passwordError === null ||
+      emailError ||
+      emailError === null
+    ) {
+      handleName({ username: target.username.value } as Name);
+      handleEmail({ email: target.email.value } as Email);
+      handlePassword({ password: target.password.value } as PasswordSignup);
+      console.log("Fix errors before submitting");
     } else {
-      console.log("success");
-      // redirect to dashboard
+      // Submit form to backend, check for backend validation errors then redirect to dashboard.
+      console.log("submitted");
     }
 
     // Prevent form submission
@@ -111,16 +71,16 @@ function SignUp() {
               <label htmlFor="username">Username</label>
               <input
                 className={`border-0 outline-0 bg-grey rounded-sm px-3 py-2 text-sm ${
-                  userError
+                  nameError
                     ? "ring-2 ring-[#7f1d1d]"
                     : "ring ring-grey-ring hover:ring-grey-ring-hover focus:ring-[3px] focus:ring-grey-ring-hover"
                 }`}
                 type="text"
                 name="username"
                 id="username"
-                onBlur={(e) => handleUsername({ username: e.target.value })}
+                onBlur={(e) => handleName({ username: e.target.value })}
               />
-              <p className="text-[#f36060] text-xs">{userError}</p>
+              <p className="text-[#f36060] text-xs">{nameError}</p>
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="email">Email</label>
