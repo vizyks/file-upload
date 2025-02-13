@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
+import NotFound from "./pages/not-found";
 import Home from "./pages/home/home";
 import LogIn from "./pages/auth/login";
 import SignUp from "./pages/auth/signup";
@@ -22,6 +23,10 @@ function Router() {
           element: <SignUp />,
         },
       ],
+    },
+    {
+      path: "*",
+      element: <NotFound />,
     },
   ]);
 
