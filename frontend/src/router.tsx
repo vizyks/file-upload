@@ -6,6 +6,9 @@ import LogIn from "./pages/auth/login";
 import SignUp from "./pages/auth/signup";
 
 function Router() {
+  // take LogIn and Signup out of the App element and use App element for actual app elements like
+  // file dashboard etc to create a seperation of wrappers and other things.
+
   const router = createBrowserRouter([
     {
       element: <App />,

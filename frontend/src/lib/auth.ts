@@ -1,4 +1,11 @@
 import { z } from "zod";
+import api from "./api-client";
+
+export const logOut = async () => {
+  const res = await api.get("/logout");
+  console.log(res);
+  return res;
+};
 
 export const nameSchema = z.object({
   username: z
