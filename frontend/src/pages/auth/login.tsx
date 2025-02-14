@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import handleValidation from "@/features/handleValidation";
+import handleValidation from "@/features/auth/handleValidation";
 import {
   nameSchema,
   Name,
