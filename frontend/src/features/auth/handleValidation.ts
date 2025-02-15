@@ -1,24 +1,17 @@
-const handleValidation = <T>(
-  value: T,
-  schema: Zod.Schema<T>,
-  setError: (error: string) => void,
-  fieldName: string
+import { z } from "zod";
+
+const handleValidation = <T extends z.ZodTypeAny>(
+  value: string,
+  schema: T,
+  setError: (error: string) => void
 ) => {
   const result = schema.safeParse(value);
 
   if (result.success) {
     setError("");
-    return true;
   } else {
-    const error = result.error.format() as Record<
-      string,
-      { _errors?: string[] }
-    >;
-
-    if (error[fieldName]?._errors?.[0]) {
-      setError(error[fieldName]._errors[0]);
-      return false;
-    }
+    const error = result.error.format();
+    setError(error._errors[0]);
   }
 };
 

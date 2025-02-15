@@ -14,16 +14,11 @@ function LogIn() {
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const handleName = (username: Name) => {
-    handleValidation(username, nameSchema, setNameError, "username");
+    handleValidation(username, nameSchema, setNameError);
   };
 
   const handlePassword = (password: PasswordLogin) => {
-    handleValidation(
-      password,
-      passwordLoginSchema,
-      setPasswordError,
-      "password"
-    );
+    handleValidation(password, passwordLoginSchema, setPasswordError);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -39,8 +34,8 @@ function LogIn() {
       passwordError === null
     ) {
       // Validate again
-      handleName({ username: target.username.value } as Name);
-      handlePassword({ password: target.password.value } as PasswordLogin);
+      handleName(target.username.value);
+      handlePassword(target.password.value);
       console.log("Fix errors before submitting");
     } else {
       // Submit form to backend, check for backend validation errors then redirect to dashboard.
@@ -72,7 +67,7 @@ function LogIn() {
                 type="text"
                 name="username"
                 id="username"
-                onBlur={(e) => handleName({ username: e.target.value })}
+                onBlur={(e) => handleName(e.target.value)}
               />
               <p className="text-[#f36060] text-xs">{nameError}</p>
             </div>
@@ -98,7 +93,7 @@ function LogIn() {
                 type="password"
                 name="password"
                 id="password"
-                onBlur={(e) => handlePassword({ password: e.target.value })}
+                onBlur={(e) => handlePassword(e.target.value)}
               />
               <p className="text-[#f36060] text-xs">{passwordError}</p>
             </div>

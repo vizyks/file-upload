@@ -17,18 +17,13 @@ function SignUp() {
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const handleName = (username: Name) =>
-    handleValidation(username, nameSchema, setNameError, "username");
+    handleValidation(username, nameSchema, setNameError);
 
   const handleEmail = (email: Email) =>
-    handleValidation(email, emailSchema, setEmailError, "email");
+    handleValidation(email, emailSchema, setEmailError);
 
   const handlePassword = (password: PasswordSignup) =>
-    handleValidation(
-      password,
-      passwordSignupSchema,
-      setPasswordError,
-      "password"
-    );
+    handleValidation(password, passwordSignupSchema, setPasswordError);
 
   const handleSubmit = (e: React.FormEvent) => {
     const target = e.target as typeof e.target & {
@@ -56,14 +51,13 @@ function SignUp() {
       // Submit form to backend, check for backend validation errors then redirect to dashboard.
       console.log("submitted");
     }
-      
 
+    */
     signUp(
       target.username.value,
       target.email.value,
       target.password.value
     ).then((res) => console.log(res));
-    */
 
     // Prevent form submission
     e.preventDefault();
@@ -90,7 +84,7 @@ function SignUp() {
                 type="text"
                 name="username"
                 id="username"
-                onBlur={(e) => handleName({ username: e.target.value })}
+                onBlur={(e) => handleName(e.target.value)}
               />
               <p className="text-[#f36060] text-xs">{nameError}</p>
             </div>
@@ -105,7 +99,7 @@ function SignUp() {
                 type="email"
                 name="email"
                 id="email"
-                onBlur={(e) => handleEmail({ email: e.target.value })}
+                onBlur={(e) => handleEmail(e.target.value)}
               />
               <p className="text-[#f36060] text-xs">{emailError}</p>
             </div>
@@ -120,7 +114,7 @@ function SignUp() {
                 type="password"
                 name="password"
                 id="password"
-                onBlur={(e) => handlePassword({ password: e.target.value })}
+                onBlur={(e) => handlePassword(e.target.value)}
               />
               <p className="text-[#f36060] text-xs">{passwordError}</p>
             </div>
