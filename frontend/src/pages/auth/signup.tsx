@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import handleValidation from "@/features/auth/handleValidation";
+import { signUp } from "@/lib/auth";
 import {
   nameSchema,
   Name,
@@ -8,7 +9,7 @@ import {
   Email,
   passwordSignupSchema,
   PasswordSignup,
-} from "@/lib/auth";
+} from "@packages/schema";
 
 function SignUp() {
   const [nameError, setNameError] = useState<string | null>(null);
@@ -36,6 +37,9 @@ function SignUp() {
       password: { value: string };
     };
 
+    console.log(target);
+
+    /* TEMP DISABLE FORM ERROR CHECKS
     if (
       nameError ||
       nameError === null ||
@@ -52,6 +56,14 @@ function SignUp() {
       // Submit form to backend, check for backend validation errors then redirect to dashboard.
       console.log("submitted");
     }
+      
+
+    signUp(
+      target.username.value,
+      target.email.value,
+      target.password.value
+    ).then((res) => console.log(res));
+    */
 
     // Prevent form submission
     e.preventDefault();

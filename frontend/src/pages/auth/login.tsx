@@ -6,7 +6,7 @@ import {
   Name,
   passwordLoginSchema,
   PasswordLogin,
-} from "@/lib/auth";
+} from "@packages/schema";
 
 function LogIn() {
   // Use null to determine if page just loaded

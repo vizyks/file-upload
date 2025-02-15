@@ -1,40 +1,26 @@
-import { z } from "zod";
 import api from "./api-client";
 
 export const logOut = async () => {
-  const res = await api.get("/logout");
-  console.log(res);
+  const res = await api.get("/users/logout");
   return res;
 };
 
-export const nameSchema = z.object({
-  username: z
-    .string()
-    .min(1, { message: "Can't be empty." })
-    .max(10, { message: "Can't be 10 or more character long." }),
-});
-
-export type Name = z.infer<typeof nameSchema>;
-
-export const emailSchema = z.object({
-  email: z.string().min(1, { message: "Can't be empty." }).email(),
-});
-
-export type Email = z.infer<typeof emailSchema>;
-
-export const passwordLoginSchema = z.object({
-  password: z.string().min(1, { message: "Can't be empty." }),
-});
-
-export type PasswordLogin = z.infer<typeof passwordLoginSchema>;
-
-export const passwordSignupSchema = z.object({
-  password: z
-    .string()
-    .min(1, { message: "Can't be empty." })
-    .regex(/[^a-zA-Z0-9\s]/, {
-      message: "Must contain atleast one special character.",
-    }),
-});
-
-export type PasswordSignup = z.infer<typeof passwordSignupSchema>;
+export const signUp = async (
+  username: string,
+  email: string,
+  password: string
+) => {
+  const res = await api.post(
+    "/users/signup",
+    {
+      username: username,
+      email: email,
+      password: password,
+    },
+    {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    }
+  );
+  console.log("submitted");
+  return res;
+};
