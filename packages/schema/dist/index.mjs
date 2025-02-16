@@ -18,3 +18,8 @@ export const passwordSignupSchema = z
     .regex(/[^a-zA-Z0-9\s]/, {
     message: "Must contain atleast one special character.",
 });
+export const userSignUpSchema = z.object({
+    username: nameSchema,
+    email: emailSchema,
+    password: passwordSignupSchema,
+});
