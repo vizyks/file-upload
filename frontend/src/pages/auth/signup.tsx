@@ -53,11 +53,13 @@ function SignUp() {
     }
 
     */
-    signUp(
-      target.username.value,
-      target.email.value,
-      target.password.value
-    ).then((res) => console.log(res));
+    signUp(target.username.value, target.email.value, target.password.value)
+      .then((res) => console.log("Response", res))
+      .catch((err) => console.log("Error", err.response.data));
+    // If signup error
+    // Display errors according to error type e.g username errors => setUserError
+    // Else
+    // redirect to dashboard
 
     // Prevent form submission
     e.preventDefault();
