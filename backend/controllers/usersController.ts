@@ -6,6 +6,10 @@ import {
   UserLogIn,
 } from "@packages/schema";
 
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
 const asyncWrapper =
   (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) =>
   (req: Request, res: Response, next: NextFunction) => {
@@ -44,28 +48,63 @@ export const logIn = asyncWrapper(
   }
 );
 
-export const signUp = asyncWrapper(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { username, email, password } = req.body;
-    console.log(
-      `SIGNUP => Username: ${username}, Email: ${email} Password ${password}`
-    );
+export const signUp = asyncWrapper(async (req: Request, res: Response) => {
+  const { username, email, password } = req.body;
 
-    const result = userSignUpSchema.safeParse(req.body);
-    if (result.success) {
-      // check if email already exists/in use
-      // if email exists, return error
-      // eles create user
-      console.log(result);
-      res.send(result.success);
-    } else {
-      // return errors
-      const error = result.error.flatten();
-      //error.fieldErrors[<FieldName>][0]
-      console.log(error.fieldErrors);
-      res.status(400).send(error.fieldErrors);
+  const result = userSignUpSchema.safeParse(req.body);
+
+  // Check if initial schema validation succeded
+  if (result.success) {
+    try {
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          OR: [
+            {
+              username: username,
+            },
+            {
+              email: email,
+            },
+          ],
+        },
+      });
+
+      // Check if username and or email already exists
+      if (existingUser) {
+        const errors: Record<string, string[]> = {};
+        if (existingUser.username === username) {
+          errors.username = ["Username already exists."];
+        }
+        if (existingUser.email === email) {
+          errors.email = ["Email already exists."];
+        }
+
+        res.status(400).send(errors);
+      } else {
+        // Create user if no conflicts
+        const user = await prisma.user.create({
+          data: {
+            username: username,
+            email: email,
+            password: password,
+          },
+        });
+
+        console.log("USER CREATED:", user);
+        res.status(201).send("User created successfully.");
+      }
+    } catch (err) {
+      // Catch any other errors e.g P2002 is "Unique constraint failed on the {constraint}"
+      // P2002 shouldn't be called because already checking if fields are Unique.
+      if (err.code === "P2002") {
+        console.log("ERROR", err.meta);
+      } else {
+        console.log(err);
+      }
     }
-    //res.redirect("/");
-    //next(err);
+  } else {
+    // Return initial schema validation errors
+    const error = result.error.flatten();
+    res.status(400).send(error.fieldErrors);
   }
-);
+});

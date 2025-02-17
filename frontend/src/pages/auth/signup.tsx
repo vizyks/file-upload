@@ -6,6 +6,7 @@ import {
   nameSchema,
   emailSchema,
   passwordSignupSchema,
+  userSignUpSchema,
 } from "@packages/schema";
 import handleErrors from "@/features/auth/handleErrors";
 
@@ -16,6 +17,7 @@ function SignUp() {
     password: null,
   });
 
+  // Handle validation/errors on per input basis
   const handleName = (username: string) =>
     handleValidation("username", username, nameSchema, setErrors);
 
@@ -25,6 +27,7 @@ function SignUp() {
   const handlePassword = (password: string) =>
     handleValidation("password", password, passwordSignupSchema, setErrors);
 
+  // Handle validation/errors on whole form and backend response
   const handleSubmit = (e: React.FormEvent) => {
     const target = e.target as typeof e.target & {
       username: { value: string };
@@ -32,33 +35,25 @@ function SignUp() {
       password: { value: string };
     };
 
-    /* TEMP DISABLE FORM ERROR CHECKS
-    // Use UserSignUpSchema to parse and use result.success to determine submission
-    if (
-      nameError ||
-      nameError === null ||
-      passwordError ||
-      passwordError === null ||
-      emailError ||
-      emailError === null
-    ) {
-      handleName({ username: target.username.value } as Name);
-      handleEmail({ email: target.email.value } as Email);
-      handlePassword({ password: target.password.value } as PasswordSignup);
-      console.log("Fix errors before submitting");
-    } else {
-      // Submit form to backend, check for backend validation errors then redirect to dashboard.
-      console.log("submitted");
-    }
+    const result = userSignUpSchema.safeParse({
+      username: target.username.value,
+      email: target.email.value,
+      password: target.password.value,
+    });
 
-    */
-    signUp(target.username.value, target.email.value, target.password.value)
-      .then((res) => console.log("Response", res))
-      .catch((err) => handleErrors(err.response.data, setErrors));
-    // If signup error
-    // Display errors according to error type e.g username errors => setUserError
-    // Else
-    // redirect to dashboard
+    if (result.success) {
+      signUp(target.username.value, target.email.value, target.password.value)
+        .then((res) => console.log("Response: ", res))
+        .catch((err) => {
+          handleErrors(err.response.data, setErrors);
+        });
+
+      // If successful redirect to dashboard
+      console.log("Submitted, redirecting to dashboard...");
+    } else {
+      const error = result.error.flatten();
+      handleErrors(error.fieldErrors, setErrors);
+    }
 
     // Prevent form submission
     e.preventDefault();

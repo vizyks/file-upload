@@ -1,9 +1,9 @@
 import api from "./api-client";
 
 export type AuthErrors = {
-  username: null | string;
-  email?: null | string;
-  password: null | string;
+  username: null | string | string[];
+  email?: null | string | string[];
+  password: null | string | string[];
 };
 
 export const logOut = async () => {

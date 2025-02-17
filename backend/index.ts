@@ -20,4 +20,6 @@ app.get("/api/v1", (req, res) => {
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/files", filesRouter);
 
+// Can create an error handling middleware to ensure the catching of all errors.
+
 app.listen(PORT, () => console.log(`App listening on port ${PORT}`));
