@@ -20,7 +20,7 @@ export const logOut = (req, res) => {
 export const logIn = asyncWrapper(
   async (req: Request, res: Response, next: NextFunction) => {
     const { username, password } = req.body;
-    console.log(`SIGNUP => Username: ${username}, Password ${password}`);
+    console.log(`LOGIN => Username: ${username}, Password ${password}`);
 
     const result = userLogInSchema.safeParse(req.body);
     if (result.success) {
