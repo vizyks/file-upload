@@ -1,24 +1,23 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import handleValidation from "@/features/auth/handleValidation";
-import {
-  nameSchema,
-  Name,
-  passwordLoginSchema,
-  PasswordLogin,
-} from "@packages/schema";
+import { logIn, AuthErrors } from "@/lib/auth";
+import { nameSchema, passwordLoginSchema } from "@packages/schema";
+import handleErrors from "@/features/auth/handleErrors";
 
 function LogIn() {
   // Use null to determine if page just loaded
-  const [nameError, setNameError] = useState<string | null>(null);
-  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<AuthErrors>({
+    username: null,
+    password: null,
+  });
 
-  const handleName = (username: Name) => {
-    handleValidation(username, nameSchema, setNameError);
+  const handleName = (username: string) => {
+    handleValidation("username", username, nameSchema, setErrors);
   };
 
-  const handlePassword = (password: PasswordLogin) => {
-    handleValidation(password, passwordLoginSchema, setPasswordError);
+  const handlePassword = (password: string) => {
+    handleValidation("password", password, passwordLoginSchema, setErrors);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -27,6 +26,7 @@ function LogIn() {
       password: { value: string };
     };
 
+    /* TEMP DISABLE VALIDATION FOR TESTING
     if (
       nameError ||
       nameError === null ||
@@ -41,6 +41,11 @@ function LogIn() {
       // Submit form to backend, check for backend validation errors then redirect to dashboard.
       console.log("submitted");
     }
+      */
+
+    logIn(target.username.value, target.password.value)
+      .then((res) => console.log("Response", res))
+      .catch((err) => handleErrors(err.response.data, setErrors));
 
     // Prevent form submission
     e.preventDefault();
@@ -60,7 +65,7 @@ function LogIn() {
               <label htmlFor="username">Username</label>
               <input
                 className={`border-0 outline-0 bg-grey rounded-sm px-3 py-2 text-sm ${
-                  nameError
+                  errors["username"]
                     ? "ring-2 ring-[#7f1d1d]"
                     : "ring ring-grey-ring hover:ring-grey-ring-hover focus:ring-[3px] focus:ring-grey-ring-hover"
                 }`}
@@ -69,7 +74,7 @@ function LogIn() {
                 id="username"
                 onBlur={(e) => handleName(e.target.value)}
               />
-              <p className="text-[#f36060] text-xs">{nameError}</p>
+              <p className="text-[#f36060] text-xs">{errors["username"]}</p>
             </div>
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center">
@@ -86,7 +91,7 @@ function LogIn() {
 
               <input
                 className={`border-0 outline-0 bg-grey rounded-sm px-3 py-2 text-sm ${
-                  passwordError
+                  errors["password"]
                     ? "ring-2 ring-[#7f1d1d]"
                     : "ring ring-grey-ring hover:ring-grey-ring-hover focus:ring-[3px] focus:ring-grey-ring-hover"
                 }`}
@@ -95,7 +100,7 @@ function LogIn() {
                 id="password"
                 onBlur={(e) => handlePassword(e.target.value)}
               />
-              <p className="text-[#f36060] text-xs">{passwordError}</p>
+              <p className="text-[#f36060] text-xs">{errors["password"]}</p>
             </div>
             <input
               className="bg-purple py-3 px-8 mt-2 text-sm rounded-sm font-bold transition duration-150 ease-in-out hover:bg-purple-btn-hover hover:cursor-pointer"

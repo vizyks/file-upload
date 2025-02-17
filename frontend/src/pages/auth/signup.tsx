@@ -1,29 +1,29 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import handleValidation from "@/features/auth/handleValidation";
-import { signUp } from "@/lib/auth";
+import { signUp, AuthErrors } from "@/lib/auth";
 import {
   nameSchema,
-  Name,
   emailSchema,
-  Email,
   passwordSignupSchema,
-  PasswordSignup,
 } from "@packages/schema";
+import handleErrors from "@/features/auth/handleErrors";
 
 function SignUp() {
-  const [nameError, setNameError] = useState<string | null>(null);
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<AuthErrors>({
+    username: null,
+    email: null,
+    password: null,
+  });
 
-  const handleName = (username: Name) =>
-    handleValidation(username, nameSchema, setNameError);
+  const handleName = (username: string) =>
+    handleValidation("username", username, nameSchema, setErrors);
 
-  const handleEmail = (email: Email) =>
-    handleValidation(email, emailSchema, setEmailError);
+  const handleEmail = (email: string) =>
+    handleValidation("email", email, emailSchema, setErrors);
 
-  const handlePassword = (password: PasswordSignup) =>
-    handleValidation(password, passwordSignupSchema, setPasswordError);
+  const handlePassword = (password: string) =>
+    handleValidation("password", password, passwordSignupSchema, setErrors);
 
   const handleSubmit = (e: React.FormEvent) => {
     const target = e.target as typeof e.target & {
@@ -32,9 +32,8 @@ function SignUp() {
       password: { value: string };
     };
 
-    console.log(target);
-
     /* TEMP DISABLE FORM ERROR CHECKS
+    // Use UserSignUpSchema to parse and use result.success to determine submission
     if (
       nameError ||
       nameError === null ||
@@ -55,7 +54,7 @@ function SignUp() {
     */
     signUp(target.username.value, target.email.value, target.password.value)
       .then((res) => console.log("Response", res))
-      .catch((err) => console.log("Error", err.response.data));
+      .catch((err) => handleErrors(err.response.data, setErrors));
     // If signup error
     // Display errors according to error type e.g username errors => setUserError
     // Else
@@ -79,7 +78,7 @@ function SignUp() {
               <label htmlFor="username">Username</label>
               <input
                 className={`border-0 outline-0 bg-grey rounded-sm px-3 py-2 text-sm ${
-                  nameError
+                  errors[`username`]
                     ? "ring-2 ring-[#7f1d1d]"
                     : "ring ring-grey-ring hover:ring-grey-ring-hover focus:ring-[3px] focus:ring-grey-ring-hover"
                 }`}
@@ -88,13 +87,13 @@ function SignUp() {
                 id="username"
                 onBlur={(e) => handleName(e.target.value)}
               />
-              <p className="text-[#f36060] text-xs">{nameError}</p>
+              <p className="text-[#f36060] text-xs">{errors[`username`]}</p>
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="email">Email</label>
               <input
                 className={`border-0 outline-0 bg-grey rounded-sm px-3 py-2 text-sm ${
-                  emailError
+                  errors["email"]
                     ? "ring-2 ring-[#7f1d1d]"
                     : "ring ring-grey-ring hover:ring-grey-ring-hover focus:ring-[3px] focus:ring-grey-ring-hover"
                 }`}
@@ -103,13 +102,13 @@ function SignUp() {
                 id="email"
                 onBlur={(e) => handleEmail(e.target.value)}
               />
-              <p className="text-[#f36060] text-xs">{emailError}</p>
+              <p className="text-[#f36060] text-xs">{errors["email"]}</p>
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="password">Password</label>
               <input
                 className={`border-0 outline-0 bg-grey rounded-sm px-3 py-2 text-sm ${
-                  passwordError
+                  errors["password"]
                     ? "ring-2 ring-[#7f1d1d]"
                     : "ring ring-grey-ring hover:ring-grey-ring-hover focus:ring-[3px] focus:ring-grey-ring-hover"
                 }`}
@@ -118,7 +117,7 @@ function SignUp() {
                 id="password"
                 onBlur={(e) => handlePassword(e.target.value)}
               />
-              <p className="text-[#f36060] text-xs">{passwordError}</p>
+              <p className="text-[#f36060] text-xs">{errors["password"]}</p>
             </div>
             <input
               className="bg-purple py-3 px-8 mt-2 text-sm rounded-sm font-bold transition duration-150 ease-in-out hover:bg-purple-btn-hover hover:cursor-pointer"
