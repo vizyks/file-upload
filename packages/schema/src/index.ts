@@ -8,20 +8,14 @@ export const nameSchema = z
   .min(1, { message: "Can't be empty." })
   .max(10, { message: "Can't be 10 or more character long." });
 
-export type Name = z.infer<typeof nameSchema>;
-
 export const emailSchema = z
   .string()
   .min(1, { message: "Can't be empty." })
   .email();
 
-export type Email = z.infer<typeof emailSchema>;
-
 export const passwordLoginSchema = z
   .string()
   .min(1, { message: "Can't be empty." });
-
-export type PasswordLogin = z.infer<typeof passwordLoginSchema>;
 
 export const passwordSignupSchema = z
   .string()
@@ -30,8 +24,6 @@ export const passwordSignupSchema = z
     message: "Must contain atleast one special character.",
   });
 
-export type PasswordSignup = z.infer<typeof passwordSignupSchema>;
-
 export const userSignUpSchema = z.object({
   username: nameSchema,
   email: emailSchema,
@@ -39,3 +31,10 @@ export const userSignUpSchema = z.object({
 });
 
 export type UserSignUp = z.infer<typeof userSignUpSchema>;
+
+export const userLogInSchema = z.object({
+  username: nameSchema,
+  password: passwordLoginSchema,
+});
+
+export type UserLogIn = z.infer<typeof userLogInSchema>;
