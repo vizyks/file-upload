@@ -44,9 +44,7 @@ function SignUp() {
     if (result.success) {
       signUp(target.username.value, target.email.value, target.password.value)
         .then((res) => console.log("Response: ", res))
-        .catch((err) => {
-          handleErrors(err.response.data, setErrors);
-        });
+        .catch((err) => handleErrors(err.response.data, setErrors));
 
       // If successful redirect to dashboard
       console.log("Submitted, redirecting to dashboard...");

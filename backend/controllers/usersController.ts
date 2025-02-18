@@ -21,32 +21,39 @@ export const logOut = (req, res) => {
   res.send("This is a logout route.");
 };
 
-export const logIn = asyncWrapper(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { username, password } = req.body;
-    console.log(`LOGIN => Username: ${username}, Password ${password}`);
+export const logIn = asyncWrapper(async (req: Request, res: Response) => {
+  const { username, password } = req.body;
 
-    const result = userLogInSchema.safeParse(req.body);
-    if (result.success) {
-      // check if username exists
-      // return username doesn't exists
-      // check if password matches
-      // return error, wrong password
+  const result = userLogInSchema.safeParse(req.body);
 
-      // log in user
-      console.log(result);
-      res.send(result.success);
-    } else {
-      // return errors
-      const error = result.error.flatten();
-      //error.fieldErrors[<FieldName>][0]
-      console.log(error.fieldErrors);
-      res.status(400).send(error.fieldErrors);
+  // Check if initial schema validation is successful
+  if (result.success) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          username: username,
+        },
+      });
+
+      if (user) {
+        // Update with bcrypt when implemented
+        if (user.password !== password) {
+          res.status(400).send({ password: ["Wrong password."] });
+        } else {
+          // LogIn user by returning a session cookie
+          res.status(200).send("Successfully logged in.");
+        }
+      } else {
+        res.status(400).send({ username: ["User does not exist."] });
+      }
+    } catch (err) {
+      console.log(err);
     }
-    //res.redirect("/");
-    //next(err);
+  } else {
+    const error = result.error.flatten();
+    res.status(400).send(error.fieldErrors);
   }
-);
+});
 
 export const signUp = asyncWrapper(async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
@@ -82,6 +89,8 @@ export const signUp = asyncWrapper(async (req: Request, res: Response) => {
         res.status(400).send(errors);
       } else {
         // Create user if no conflicts
+
+        // Implement Bcrypt to hash user password
         const user = await prisma.user.create({
           data: {
             username: username,

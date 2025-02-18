@@ -27,7 +27,7 @@ export const signUp = async (
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     }
   );
-  console.log("submitted");
+
   return res;
 };
 
@@ -42,6 +42,6 @@ export const logIn = async (username: string, password: string) => {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     }
   );
-  console.log("logged in");
+
   return res;
 };

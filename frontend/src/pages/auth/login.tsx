@@ -2,7 +2,11 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import handleValidation from "@/features/auth/handleValidation";
 import { logIn, AuthErrors } from "@/lib/auth";
-import { nameSchema, passwordLoginSchema } from "@packages/schema";
+import {
+  nameSchema,
+  passwordLoginSchema,
+  userLogInSchema,
+} from "@packages/schema";
 import handleErrors from "@/features/auth/handleErrors";
 
 function LogIn() {
@@ -26,26 +30,21 @@ function LogIn() {
       password: { value: string };
     };
 
-    /* TEMP DISABLE VALIDATION FOR TESTING
-    if (
-      nameError ||
-      nameError === null ||
-      passwordError ||
-      passwordError === null
-    ) {
-      // Validate again
-      handleName(target.username.value);
-      handlePassword(target.password.value);
-      console.log("Fix errors before submitting");
-    } else {
-      // Submit form to backend, check for backend validation errors then redirect to dashboard.
-      console.log("submitted");
-    }
-      */
+    const result = userLogInSchema.safeParse({
+      username: target.username.value,
+      password: target.password.value,
+    });
 
-    logIn(target.username.value, target.password.value)
-      .then((res) => console.log("Response", res))
-      .catch((err) => handleErrors(err.response.data, setErrors));
+    if (result.success) {
+      logIn(target.username.value, target.password.value)
+        .then((res) => console.log("Response:", res))
+        .catch((err) => handleErrors(err.response.data, setErrors));
+
+      console.log("Logged in, redirecting to dashboard...");
+    } else {
+      const error = result.error.flatten();
+      handleErrors(error.fieldErrors, setErrors);
+    }
 
     // Prevent form submission
     e.preventDefault();
