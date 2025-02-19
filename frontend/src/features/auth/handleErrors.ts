@@ -6,7 +6,10 @@ const handleErrors = (
   setErrors((prev) => ({
     ...prev,
     ...Object.fromEntries(
-      Object.entries(newErrors).map(([key, val]) => [key, val ? val[0] : null])
+      Object.entries(newErrors).map(([key, val]) => [
+        key,
+        val ? (typeof val === "string" ? val : val[0]) : null,
+      ])
     ),
   }));
 };
