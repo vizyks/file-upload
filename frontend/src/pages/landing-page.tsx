@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function Home() {
+function LandingPage() {
   return (
     <>
       <main className="bg-black text-white text-center w-screen h-screen flex justify-center items-center">
@@ -32,4 +32,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default LandingPage;
