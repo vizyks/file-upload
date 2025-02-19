@@ -6,6 +6,7 @@ import {
   UserLogIn,
 } from "@packages/schema";
 import prisma from "../prismaClient";
+import bcrypt from "bcryptjs";
 
 const asyncWrapper =
   (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) =>
@@ -49,9 +50,9 @@ export const signUp = asyncWrapper(async (req: Request, res: Response) => {
       },
     });
 
-    // Check if username and or email already exists
     if (existingUser) {
       const errors: Record<string, string> = {};
+
       if (existingUser.username === username) {
         errors.username = "Username already exists.";
       }
@@ -62,12 +63,12 @@ export const signUp = asyncWrapper(async (req: Request, res: Response) => {
       return res.status(400).send(errors);
     }
 
-    // Implement Bcrypt to hash user password
+    const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
       data: {
         username: username,
         email: email,
-        password: password,
+        password: hashedPassword,
       },
     });
 

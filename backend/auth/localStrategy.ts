@@ -2,6 +2,7 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import prisma from "../prismaClient";
 import { CustomVerifyOptions } from "../types/auth";
+import bcrypt from "bcryptjs";
 
 export default passport.use(
   new LocalStrategy(async (username, password, done) => {
@@ -27,8 +28,10 @@ export default passport.use(
           message: "User not found",
           statusCode: 401,
         } as CustomVerifyOptions);
-      // Update when bcrypt is implemented
-      if (user.password !== password)
+
+      const match = await bcrypt.compare(password, user.password);
+
+      if (!match)
         return done(null, false, {
           field: "password",
           message: "Invalid credentials",
