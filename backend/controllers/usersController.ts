@@ -5,10 +5,7 @@ import {
   userLogInSchema,
   UserLogIn,
 } from "@packages/schema";
-
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../prismaClient";
 
 const asyncWrapper =
   (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) =>
@@ -23,32 +20,9 @@ export const logOut = (req, res) => {
 
 export const logIn = asyncWrapper(async (req: Request, res: Response) => {
   const { username, password } = req.body;
-  const result = userLogInSchema.safeParse(req.body);
+  // Successful validation sign JWT
 
-  // Check if initial schema validation is successful
-  if (!result.success) {
-    const error = result.error.flatten();
-    return res.status(400).send(error.fieldErrors);
-  }
-
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        username: username,
-      },
-    });
-
-    if (!user)
-      return res.status(400).send({ username: ["User does not exist."] });
-    // Update with bcrypt when implemented
-    if (user.password !== password)
-      return res.status(400).send({ password: ["Wrong password."] });
-
-    // LogIn user by returning a session cookie
-    return res.status(200).send("Successfully logged in.");
-  } catch (err) {
-    console.log(err);
-  }
+  console.log("Log in from useControler");
 });
 
 export const signUp = asyncWrapper(async (req: Request, res: Response) => {
@@ -77,12 +51,12 @@ export const signUp = asyncWrapper(async (req: Request, res: Response) => {
 
     // Check if username and or email already exists
     if (existingUser) {
-      const errors: Record<string, string[]> = {};
+      const errors: Record<string, string> = {};
       if (existingUser.username === username) {
-        errors.username = ["Username already exists."];
+        errors.username = "Username already exists.";
       }
       if (existingUser.email === email) {
-        errors.email = ["Email already exists."];
+        errors.email = "Email already exists.";
       }
 
       return res.status(400).send(errors);
