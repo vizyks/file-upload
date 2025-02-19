@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import handleValidation from "@/features/auth/handleValidation";
 import { signUp, AuthErrors } from "@/lib/auth";
@@ -16,6 +16,8 @@ function SignUp() {
     email: null,
     password: null,
   });
+
+  const navigate = useNavigate();
 
   // Handle validation/errors on per input basis
   const handleName = (username: string) =>
@@ -42,12 +44,15 @@ function SignUp() {
     });
 
     if (result.success) {
+      // Upon account creation success make a better visual indicator of success
+      // Then have the user navigate (or do it for them) to login to log into their new account.
       signUp(target.username.value, target.email.value, target.password.value)
-        .then((res) => console.log("Response: ", res))
+        .then((res) => {
+          console.log(res);
+          console.log("Submitted, redirecting to dashboard...");
+          navigate("/login");
+        })
         .catch((err) => handleErrors(err.response.data, setErrors));
-
-      // If successful redirect to dashboard
-      console.log("Submitted, redirecting to dashboard...");
     } else {
       const error = result.error.flatten();
       handleErrors(error.fieldErrors, setErrors);

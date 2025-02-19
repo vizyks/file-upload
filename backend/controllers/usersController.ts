@@ -24,6 +24,7 @@ export const logIn = asyncWrapper(async (req: Request, res: Response) => {
   // Successful validation sign JWT
 
   console.log("Log in from useControler");
+  res.status(200).send("Successful log in.");
 });
 
 export const signUp = asyncWrapper(async (req: Request, res: Response) => {

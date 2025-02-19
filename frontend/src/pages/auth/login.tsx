@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import handleValidation from "@/features/auth/handleValidation";
 import { logIn, AuthErrors } from "@/lib/auth";
@@ -15,6 +15,8 @@ function LogIn() {
     username: null,
     password: null,
   });
+
+  const navigate = useNavigate();
 
   const handleName = (username: string) => {
     handleValidation("username", username, nameSchema, setErrors);
@@ -37,10 +39,12 @@ function LogIn() {
 
     if (result.success) {
       logIn(target.username.value, target.password.value)
-        .then((res) => console.log("Response:", res))
+        .then((res) => {
+          console.log(res);
+          console.log("Logged in, redirecting to dashboard...");
+          navigate("/home");
+        })
         .catch((err) => handleErrors(err.response.data, setErrors));
-
-      console.log("Logged in, redirecting to dashboard...");
     } else {
       const error = result.error.flatten();
       handleErrors(error.fieldErrors, setErrors);
