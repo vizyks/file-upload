@@ -42,7 +42,7 @@ function LogIn() {
         .then((res) => {
           console.log(res);
           console.log("Logged in, redirecting to dashboard...");
-          navigate("/home");
+          navigate("/dashboard");
         })
         .catch((err) => handleErrors(err.response.data, setErrors));
     } else {

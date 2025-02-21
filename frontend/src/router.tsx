@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import App from "./App";
+import App from "./pages";
 import NotFound from "./pages/not-found";
 import LandingPage from "./pages/landing-page";
 import LogIn from "./pages/auth/login";
@@ -20,7 +20,7 @@ function Router() {
       element: <SignUp />,
     },
     {
-      path: "/home",
+      path: "/dashboard",
       element: <App />,
     },
     {
