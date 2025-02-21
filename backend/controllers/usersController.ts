@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { Request, Response, NextFunction } from "express";
 import {
   userSignUpSchema,
@@ -7,6 +8,7 @@ import {
 } from "@packages/schema";
 import prisma from "../prismaClient";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const asyncWrapper =
   (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) =>
@@ -20,11 +22,14 @@ export const logOut = (req, res) => {
 };
 
 export const logIn = asyncWrapper(async (req: Request, res: Response) => {
-  const { username, password } = req.body;
-  // Successful validation sign JWT
+  const { id } = req.user;
 
-  console.log("Log in from useControler");
-  res.status(200).send("Successful log in.");
+  const token = jwt.sign({ id: id }, process.env.SECRET_VALUE as string, {
+    expiresIn: "30s",
+  });
+
+  res.cookie("token", token, { maxAge: 30000, httpOnly: true });
+  res.status(200).send("Successfully logged in");
 });
 
 export const signUp = asyncWrapper(async (req: Request, res: Response) => {

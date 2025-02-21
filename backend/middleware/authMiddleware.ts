@@ -19,7 +19,7 @@ const authenticate =
             .send({ [key]: info.message || "Login failed." });
         }
 
-        // forward to logIn userController to sign JWT token
+        req.user = user;
         next();
       }
     )(req, res, next);
