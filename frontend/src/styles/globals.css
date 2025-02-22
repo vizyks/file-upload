@@ -8,6 +8,7 @@
   --color-purple-btn-hover: rgb(139, 92, 245);
   --color-purple-text-hover: rgb(196, 181, 253);
   --color-grey: rgb(34, 34, 34);
+  --color-grey-hover: rgb(48, 48, 48);
   --color-grey-accent: rgb(163, 163, 163); /* Usually for text or borders */
   --color-grey-ring: rgb(64, 64, 64); /* Ring shadow for input elements */
   --color-grey-ring-hover: rgb(82, 82, 82); /* Hover/Focused for input element*/
