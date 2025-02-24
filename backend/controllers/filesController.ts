@@ -1,5 +1,10 @@
 export const uploadFile = (req, res) => {
-  res.send(`File Uploaded!`);
+  // compare against schema
+  // return if error
+  // else uplaod the file
+
+  console.log(req.file);
+  res.json(req.file);
 };
 
 export const deleteFile = (req, res) => {
