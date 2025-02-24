@@ -18,9 +18,9 @@ const options: StrategyOptions = {
 };
 
 export default passport.use(
-  new JwtStrategy(options, (payload, done) => {
+  new JwtStrategy(options, async (payload, done) => {
     try {
-      const user = prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: {
           id: payload.id,
         },
