@@ -24,10 +24,12 @@ model User {
 
 // Add lastModified field.
 model File {
-  id         Int      @id @default(autoincrement())
-  name       String   @db.VarChar(255)
-  size       Int
-  uploadedAt DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(100)
+  type         String   @db.VarChar(30)
+  size         Int
+  lastModified DateTime @default(now())
+  uploadedAt   DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       Int
 }
