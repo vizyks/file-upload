@@ -28,4 +28,20 @@ export declare const userLogInSchema: z.ZodObject<{
     password: string;
 }>;
 export type UserLogIn = z.infer<typeof userLogInSchema>;
+export declare const fileSchema: z.ZodObject<{
+    name: z.ZodString;
+    type: z.ZodString;
+    size: z.ZodNumber;
+    userId: z.ZodNumber;
+}, "strip", z.ZodTypeAny, {
+    type: string;
+    name: string;
+    size: number;
+    userId: number;
+}, {
+    type: string;
+    name: string;
+    size: number;
+    userId: number;
+}>;
 //# sourceMappingURL=index.d.ts.map

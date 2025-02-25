@@ -1,8 +1,6 @@
 import { z } from "zod";
 
-// Convert all the objects to strings because I don't know why I did objects to begin with
-// when it's checking strings...
-
+// make max match the actual prisma schema/database requirement e.g username max is 100 character limit
 export const nameSchema = z
   .string()
   .min(1, { message: "Can't be empty." })
@@ -38,3 +36,10 @@ export const userLogInSchema = z.object({
 });
 
 export type UserLogIn = z.infer<typeof userLogInSchema>;
+
+export const fileSchema = z.object({
+  name: z.string().min(1).max(100),
+  type: z.string().min(1).max(30),
+  size: z.number().int(),
+  userId: z.number().int(),
+});
