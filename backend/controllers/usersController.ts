@@ -9,12 +9,7 @@ import {
 import prisma from "../prismaClient";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
-const asyncWrapper =
-  (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch(next);
-  };
+import asyncWrapper from "../utils/asyncWrapper";
 
 export const logOut = (req, res) => {
   console.log("This is a logout route");
@@ -25,10 +20,11 @@ export const logIn = asyncWrapper(async (req: Request, res: Response) => {
   const { id } = req.user;
 
   const token = jwt.sign({ id: id }, process.env.SECRET_VALUE as string, {
-    expiresIn: "30s",
+    expiresIn: "1hr",
   });
 
-  res.cookie("token", token, { maxAge: 30000, httpOnly: true });
+  // max age = 1hr, calculated in ms
+  res.cookie("token", token, { maxAge: 3600000, httpOnly: true });
   res.status(200).send("Successfully logged in");
 });
 

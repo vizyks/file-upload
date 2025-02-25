@@ -6,7 +6,8 @@ const filesRouter = Router();
 
 filesRouter.post(
   "/upload",
-  /*authenticate('jwt'),*/ upload("file"),
+  authenticate("jwt"),
+  upload("file"),
   filesController.uploadFile
 );
 filesRouter.get("/:fileId", filesController.getFile);
