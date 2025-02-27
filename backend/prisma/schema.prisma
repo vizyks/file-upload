@@ -22,7 +22,6 @@ model User {
   files     File[]
 }
 
-// Add lastModified field.
 model File {
   id           Int      @id @default(autoincrement())
   name         String   @db.VarChar(100)

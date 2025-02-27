@@ -1,13 +1,6 @@
 import multer from "multer";
 import { Request, Response, NextFunction } from "express";
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, __dirname + "/../uploads");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
+const storage = multer.memoryStorage();
 
 // Multer has fileFilter option to create additional checks if needed
 // fileSize = 5mb | 5000000

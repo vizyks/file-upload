@@ -1,12 +1,35 @@
 import { HiFolder, HiDotsVertical, HiDocument } from "react-icons/hi";
 import { DiGithubBadge } from "react-icons/di";
 import { Link } from "react-router-dom";
+// import { downloadFile } from "@/api/files";
+import FileUploader from "@/components/fileUploader";
 
 export default function Main() {
+  /* Export into a new function and pass fileId to determine what file to download.
+  const download = () => {
+    downloadFile()
+      .then((res) => {
+        const blob = res as unknown as Blob;
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "discordBotIntents.png"; // Change filename as needed
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((err) => console.log(err));
+  };
+  */
+
   return (
     <div className="flex-1 flex">
       <div className="bg-grey flex flex-col flex-1 rounded-lg p-4">
-        <h2 className="text-2xl font-bold">Root</h2>
+        <div className="flex">
+          <h2 className="text-2xl font-bold">Root</h2>
+          <FileUploader />
+        </div>
         <div className="grid grid-cols-[3fr_2fr_1fr_50px] text-sm p-2 gap-2 border-b-1 border-grey-ring">
           <p className="">Name</p>
           <p className="">Last Modified</p>
