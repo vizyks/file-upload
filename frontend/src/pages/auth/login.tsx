@@ -1,13 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import handleValidation from "@/features/auth/handleValidation";
+import handleValidation from "@/utils/handleValidation";
 import { logIn, AuthErrors } from "@/lib/auth";
 import {
   nameSchema,
   passwordLoginSchema,
   userLogInSchema,
 } from "@packages/schema";
-import handleErrors from "@/features/auth/handleErrors";
+import handleErrors from "@/utils/handleErrors";
 
 function LogIn() {
   // Use null to determine if page just loaded

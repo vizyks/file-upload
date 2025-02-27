@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import handleValidation from "@/features/auth/handleValidation";
+import handleValidation from "@/utils/handleValidation";
 import { signUp, AuthErrors } from "@/lib/auth";
 import {
   nameSchema,
@@ -8,7 +8,7 @@ import {
   passwordSignupSchema,
   userSignUpSchema,
 } from "@packages/schema";
-import handleErrors from "@/features/auth/handleErrors";
+import handleErrors from "@/utils/handleErrors";
 
 function SignUp() {
   const [errors, setErrors] = useState<AuthErrors>({
