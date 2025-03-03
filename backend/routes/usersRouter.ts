@@ -3,6 +3,7 @@ import * as usersController from "../controllers/usersController";
 import authenticate from "../middleware/authMiddleware";
 const usersRouter = Router();
 
+usersRouter.get("/auth/me", authenticate("jwt"), usersController.authMe);
 usersRouter.get("/logout", usersController.logOut);
 usersRouter.post("/login", authenticate("local"), usersController.logIn);
 usersRouter.post("/signup", usersController.signUp);

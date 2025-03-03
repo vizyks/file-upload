@@ -8,8 +8,10 @@ import {
   userLogInSchema,
 } from "@packages/schema";
 import handleErrors from "@/utils/handleErrors";
+import { useAuth } from "@/components/authProvider";
 
 function LogIn() {
+  const { setUser } = useAuth();
   // Use null to determine if page just loaded
   const [errors, setErrors] = useState<AuthErrors>({
     username: null,
@@ -40,9 +42,9 @@ function LogIn() {
     if (result.success) {
       logIn(target.username.value, target.password.value)
         .then((res) => {
-          console.log(res);
           console.log("Logged in, redirecting to dashboard...");
-          navigate("/dashboard");
+          setUser(res);
+          navigate("/dashboard", { replace: true });
         })
         .catch((err) => handleErrors(err.response.data, setErrors));
     } else {

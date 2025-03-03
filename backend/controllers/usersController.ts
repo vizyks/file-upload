@@ -11,6 +11,26 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import asyncWrapper from "../utils/asyncWrapper";
 
+export const authMe = asyncWrapper(async (req, res) => {
+  const { id } = req.user;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        id: true,
+        username: true,
+      },
+    });
+
+    res.status(200).send(user);
+  } catch (err) {
+    res.send(err);
+  }
+});
+
 export const logOut = (req, res) => {
   console.log("This is a logout route");
   res.send("This is a logout route.");
@@ -23,7 +43,7 @@ export const logIn = asyncWrapper(async (req: Request, res: Response) => {
     expiresIn: "1hr",
   });
 
-  // max age = 1hr, calculated in ms
+  // max age = 1hr | 3600000, calculated in ms
   res.cookie("token", token, { maxAge: 3600000, httpOnly: true });
   res.status(200).send("Successfully logged in");
 });

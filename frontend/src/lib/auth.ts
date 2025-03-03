@@ -6,6 +6,12 @@ export type AuthErrors = {
   password: null | string | string[];
 };
 
+export const getUser = async () => {
+  const res = await api.get("/users/auth/me");
+
+  return res;
+};
+
 export const logOut = async () => {
   const res = await api.get("/users/logout");
   return res;

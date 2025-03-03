@@ -1,9 +1,13 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import App from "./pages";
+import Dashboard from "./pages/dashboard";
+import Main from "./pages/dashboard/main";
+import Contact from "./pages/dashboard/contact";
 import NotFound from "./pages/not-found";
 import LandingPage from "./pages/landing-page";
 import LogIn from "./pages/auth/login";
 import SignUp from "./pages/auth/signup";
+import ProtectedRoute from "./components/protectedRoute";
+import AuthProvider from "./components/authProvider";
 
 function Router() {
   const router = createBrowserRouter([
@@ -21,7 +25,21 @@ function Router() {
     },
     {
       path: "/dashboard",
-      element: <App />,
+      element: (
+        <ProtectedRoute>
+          <Dashboard />
+        </ProtectedRoute>
+      ),
+      children: [
+        {
+          path: "/dashboard",
+          element: <Main />,
+        },
+        {
+          path: "/dashboard/contact",
+          element: <Contact />,
+        },
+      ],
     },
     {
       path: "*",
@@ -29,7 +47,11 @@ function Router() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  );
 }
 
 export default Router;
