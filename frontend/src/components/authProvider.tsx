@@ -24,7 +24,6 @@ export default function AuthProvider({
   useEffect(() => {
     getUser()
       .then((res) => {
-        console.log(res);
         setIsLoading(false);
         setUser(res);
       })

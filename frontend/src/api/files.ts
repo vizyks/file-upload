@@ -1,9 +1,8 @@
 import api from "@/lib/api-client";
+import { FileType } from "@/types/api";
 
-export const getAllFiles = async () => {
-  const res = await api.get("/files");
-
-  return res;
+export const getAllFiles = async (): Promise<{ files: FileType[] }> => {
+  return api.get("/files");
 };
 
 /* Change route to /files/<file_id>/download
