@@ -13,6 +13,17 @@ export const downloadFile = async () => {
 };
 */
 
+export const getAllFilesInFolder = (fileId): Promise<{ files: FileType[] }> => {
+  return api.get(`/files/${fileId}`);
+};
+
+export const createFolder = async (name: string) => {
+  console.log("Name:", name);
+  return api.post("/files/create", {
+    name: name,
+  });
+};
+
 export const uploadFile = async (formData: FormData) => {
   const res = await api.post("/files/upload", formData, {
     headers: {

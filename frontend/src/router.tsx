@@ -39,6 +39,10 @@ function Router() {
           path: "/dashboard/contact",
           element: <Contact />,
         },
+        {
+          path: "/dashboard/:fileId",
+          element: <Main />,
+        },
       ],
     },
     {

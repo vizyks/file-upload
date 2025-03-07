@@ -15,7 +15,11 @@ export const getAllFiles = asyncWrapper(async (req, res) => {
         id: id,
       },
       select: {
-        files: true,
+        files: {
+          where: {
+            parentId: null,
+          },
+        },
       },
     });
 
@@ -26,22 +30,26 @@ export const getAllFiles = asyncWrapper(async (req, res) => {
   }
 });
 
-export const getFile = asyncWrapper(async (req, res) => {
+export const getAllFilesInFolder = asyncWrapper(async (req, res) => {
   const { fileId } = req.params;
-  // Mock information
   try {
     const files = await prisma.user.findUnique({
       where: {
         id: 1,
       },
-      include: {
-        files: true,
+      select: {
+        files: {
+          where: {
+            parentId: Number(fileId),
+          },
+        },
       },
     });
 
-    res.send(files);
+    console.log(files);
+    res.status(200).send(files);
   } catch (err) {
-    console.log(err);
+    res.send(err);
   }
 });
 
@@ -65,6 +73,7 @@ export const uploadFile = asyncWrapper(async (req, res) => {
   try {
     // Change upload to upload in the users own folder e.g .upload(<USERID> + originalName).
     // Also think about changing originalname to just a UUID to store in DB
+    /*
     const { data, error } = await supabase.storage
       .from("warp")
       .upload(originalname, buffer, {
@@ -73,6 +82,7 @@ export const uploadFile = asyncWrapper(async (req, res) => {
 
     if (error)
       return res.status(400).send({ message: "File failed to upload" });
+    */
 
     // Change URL property when schema changes, think about using a UUID instead since you can
     // just search the bucket for the file instead of using a URL.
@@ -81,10 +91,10 @@ export const uploadFile = asyncWrapper(async (req, res) => {
         name: originalname,
         type: mimetype,
         size: size,
-        url: "http://somecloudstorage.com",
+        path: "test/path",
         user: {
           connect: {
-            id: 1,
+            id: id,
           },
         },
       },
@@ -100,6 +110,33 @@ export const uploadFile = asyncWrapper(async (req, res) => {
   }
 });
 
+export const createFolder = asyncWrapper(async (req, res) => {
+  console.log("Body", req.body.name);
+
+  try {
+    const file = await prisma.file.create({
+      data: {
+        name: req.body.name,
+        type: "folder",
+        size: 48723,
+        path: "test/path",
+        user: {
+          connect: {
+            id: req.user.id,
+          },
+        },
+      },
+    });
+
+    res.send(`Folder Created`);
+  } catch (err) {
+    console.log(err.code, err.message);
+
+    res.status(400).send(err);
+  }
+});
+
+// Wrap in async wrapper
 export const deleteFile = (req, res) => {
   const { fileId } = req.params;
   res.send(`File ID: ${fileId} is now deleted`);

@@ -29,7 +29,11 @@ model File {
   size         Int
   lastModified DateTime @default(now())
   uploadedAt   DateTime @default(now())
-  url          String 
-  user         User     @relation(fields: [userId], references: [id])
+  path         String 
   userId       Int
+  user         User     @relation(fields: [userId], references: [id])
+
+  parentId     Int?
+  parent       File?    @relation("FolderContents", fields:[parentId], references: [id])
+  children     File[]   @relation("FolderContents")
 }

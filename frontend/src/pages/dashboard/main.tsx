@@ -2,14 +2,22 @@ import { HiDotsVertical } from "react-icons/hi";
 import { FaFolder } from "react-icons/fa";
 import { DiGithubBadge } from "react-icons/di";
 import { Link } from "react-router-dom";
-import { downloadFile, getAllFiles } from "@/api/files";
+import {
+  downloadFile,
+  getAllFiles,
+  getAllFilesInFolder,
+  createFolder,
+} from "@/api/files";
 import FileUploader from "@/components/fileUploader";
 import FileRow from "@/components/fileRow";
 import { useEffect, useState } from "react";
 import { FileType } from "@/types/api";
+import { useParams } from "react-router-dom";
 
 export default function Main() {
+  const { fileId } = useParams();
   const [files, setFiles] = useState<FileType[] | null>(null);
+  console.log(fileId);
   /* Export into a new function and pass fileId to determine what file to download.
   const download = () => {
     downloadFile()
@@ -31,20 +39,32 @@ export default function Main() {
   // Add a spinner while loading files
   useEffect(() => {
     const fetchData = async () => {
-      const files = await getAllFiles();
+      let files = null;
+      if (fileId) {
+        files = await getAllFilesInFolder(fileId);
+      } else {
+        files = await getAllFiles();
+      }
 
       setFiles(files.files);
     };
 
     fetchData();
-  }, []);
+  }, [fileId]);
 
   return (
     <div className="flex-1 flex">
       <div className="bg-grey flex flex-col flex-1 rounded-lg p-4">
         <div className="flex">
           <h2 className="text-2xl font-bold">Root</h2>
+
           <FileUploader />
+          <button
+            onClick={() => createFolder("New Test Folder")}
+            className="bg-purple px-2 py-1 rounded-sm font-bold text-sm hover:cursor-pointer"
+          >
+            Create Folder
+          </button>
         </div>
         <div className="">
           <div className="grid grid-cols-[3fr_2fr_1fr_50px] text-sm p-2 gap-2 border-b-1 border-grey-ring">
